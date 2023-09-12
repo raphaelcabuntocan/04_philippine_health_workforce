@@ -1,0 +1,338 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2708
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;\f2\fswiss\fcharset0 Helvetica-Oblique;
+\f3\fnil\fcharset0 AppleColorEmoji;\f4\fswiss\fcharset0 Helvetica-BoldOblique;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww13720\viewh16580\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 2023/09/03	\
+
+\f1\b 08:22
+\f0\b0 \
+\
+Working title: Analysis of Philippine Health Workforce\
+\
+Define the business task\
+\
+Business task: How could the number of medical professionals in the Philippines be compared to the international standard?\
+\
+Objectives:\
+1. Determine the composition of medical professionals in the Philippines, in terms of:\
+	1.1 medical doctors\
+	1.2 nursing and midwifery personnel\
+	1.3 dentistry personnel\
+	1.4 pharmaceutical personnel\
+	1.5 environmental and occupational health and hygiene personnel\
+	1.6 medical and pathology laboratory personnel\
+	1.7 physiotherapy personnel\
+	1.8 traditional and complementary medicine personnel\
+	1.9 community health workers\
+2. Compare the population of medical professionals in the Philippines with the WHO standard\
+3. Determine the annual number of graduates as well as licensure exam passers in the Philippines\
+4. Determine the growth rate of practicing Philippine health workforce\
+5. Find out how long it will take for the Philippines to meet the international standards\
+\
+
+\f1\b 08:29
+\f0\b0 \
+Possible visualizations:\
+1. histrogram <to be used as a filter for time series> , donut chart/bar chart. I think bar chart will be better\
+2. bullet chart/horizontal bar chart\
+3 and 4. stacked area chart (make the color of the practcing bolder than that of the total number of graduates)\
+5. line chart (predictive)\
+\
+note: use pivot tables\
+
+\f1\b 08:59
+\f0\b0 \
+\
+\
+\
+
+\f1\b 14:15
+\f0\b0 \
+
+\f2\i drafting the rationale
+\f0\i0 \
+\
+The Philippines is one of the largest number of nurses and allied health professionals in the world. Nevertheless, the number of medical personnel leaving the country for better pay leaves one thinking regarding the real population of medical professionals serving in the said nation. This analysis aims to provide a presently-relevant, broad view of the status of allied health workers in the Philippines. This will enable various government departments, officials, and policy makers to make data-driven decisions in order to address the problems diagnosed as well as leverage on the strengths determined in the analysis. Furthermore, this will help young people, especially those about to enter tertiary education in making better career decisions. This study aims to be of help to various sectors of society such as healthcare, the academe, labor and employment, and immigration.\
+\
+
+\f1\b 14:25
+\f0\b0 \
+
+\f2\i gather datasets
+\f0\i0 \
+\
+gathered 9 data sets from https://www.who.int/data/gho/data/themes/topics/health-workforce\
+\
+need to gather more regarding the population of allied health graduates, licensed professionals, and practicing.\
+\
+datasets needed:\
+1. number of health workers in the philippines 
+\f3 \uc0\u9989 
+\f0 \
+2. number of allied health profession graduates, board passers 
+\f3 \uc0\u9989 
+\f0 \
+\
+I was able to get data sets from the Philippine Statistical Yearbook (PSY) 2022 from the Philippine Statistics Authority regarding the (a) number of government health workers as well as the (b) number of board passers. But I need more for the board passers since I only have 2020 and 2021, which is not enough for the regression.\
+\
+data source: https://psa.gov.ph/philippine-statistical-yearbook\
+\
+I found more in the PSY 2021: 2018-2019 licensure passers, and 2010-2020 graduates. I\'92ll be gathering the number of graduates to 2010 for greater predictive validity and reliability.\
+\
+
+\f1\b 15:37 
+\f0\b0 \
+for the sake of speed of cleaning and filtering, I will be uploading all of the UN tables to BigQuery and then create a new UN dataset containing only Philippine data. \
+On a side note, the data is long.\
+\
+I\'92m so thankful that the data sets are available.\
+\
+
+\f1\b 15:47
+\f0\b0 \
+all data sets deemed to be needed have been downloaded successfully.\
+will be gathering the KPI metrics of the WHO\
+\
+\
+\
+17:26\
+loading data sets to bigquery\
+17:47\
+\
+\
+2023/09/04\
+
+\f1\b 7:39\
+
+\f0\b0 merge the tables to a single table\
+\
+relevant fields:\
+Location\
+Period\
+Indicator\
+FactValueNumeric\
+\
+
+\f1\b 08:01
+\f0\b0 \
+the values of the number of medical professionals vary. some of them are expressed as the total while others are expressed as ratios per 10,000 population. Seems like I need to find the population of the nation for every year since 2010.\
+I will join them all first and then use the population during the analysis phase.
+\f1\b \
+\
+08:30
+\f0\b0 \
+the queries don\'92t show no results for Philippines when I join the other tables aside from the health workers. It seems like I have to check first if all the tables have Philippine data.\
+\
+so far, there are a lot of incomplete data. to optimize time, I\'92ll check what\'92s available in the data sets from PSA and zero in on that\
+
+\f1\b 08:45
+\f0\b0 \
+
+\f1\b \
+\
+
+\f0\b0 \
+
+\f1\b 10:06
+\f0\b0 \
+i have to compare the courses of the graduates and the board passers. graduates == board passers? yung govt employees na lang kaya?\
+\
+according to the government employee table, they only kept track of doctors, dentists, nurses, and midwives. I\'92ll just check the standards of WHO.\
+\
+"The WHO estimates that at least 2.5 medical staff (physicians, nurses and midwives) per 1,000 people are needed to provide adequate coverage with primary care interventions (WHO, World Health Report 2006).\'94 - World Bank\
+link: https://databank.worldbank.org/metadataglossary/health-nutrition-and-population-statistics/series/SH.MED.PHYS.ZS\
+\
+"Methodologically, there are no gold standards for assessing the sufficiency of the health workforce to address the health care needs of a given population. It has been estimated however, in the World Health Report 2006, that countries with fewer than 23 physicians, nurses and midwives per 10 000 population generally fail to achieve adequate coverage rates for selected primary health care interventions as prioritized by the Millennium Development Goals framework.\'94 - World Health Organization\
+https://www.who.int/data/gho/indicator-metadata-registry/imr-details/3107\
+\
+\
+because of this, I will continue with the WHO tables, combine them, and then just represent them in the bar graphs for the composition. But for the other analyses, I will just use the total to compare it with the WHO standard.\
+\
+\'93The value of the SDG composite threshold thus identified was determined to be 
+\f4\i\b 4.45 doctors, nurses and midwives per 1000 population.
+\f0\i0\b0 \'94\
+source link: HEALTH WORKFORCE REQUIREMENTS FOR UNIVERSAL HEALTH COVERAGE AND THE SUSTAINABLE DEVELOPMENT GOALS Human Resources for Health Observer Series No 17\
+\
+\
+there\'92s no data for the phiiippines under traditional, complementary medicine personnel\
+\
+I\'92ll be joining them now.\
+\
+\
+the difficulty also lies in that there are multiple entries of data and the entries per year are not consistent.\
+\
+I have to clean per table, download them, and then join them after.\
+\
+after checking the doctors table, the multiple entries are due to the formatting. some entries show the actual number of doctors while others are ratios of doctors per 10,000 population.\
+\
+I\'92ll check the other tables to see if I should take the ratio or the actual\
+\
+
+\f1\b 11:07
+\f0\b0 \
+pathologist data are present in total number only.\
+will check other tables just to confirm. it seems like I\'92ll get the total number only and then just gather the population of the Philippines per year.\
+\
+physiotherapists are present in total number as well. so i\'92ll go with that\
+\
+the final table should be rows: profession, columns: year\
+\
+\
+NOTE: for missing values, use mean to fill.\
+\
+compile them later to one spreadsheet and continue analysis there. try to use python\
+
+\f1\b 11:53
+\f0\b0 \
+\
+\
+2023/09/05\
+
+\f1\b 00:00\
+
+\f0\b0 compiling all to one excel spreadsheet\
+\
+
+\f1\b 00:31\
+\
+\
+2023/09/05\
+13:05\
+
+\f0\b0 compiling all tables to one sheet\
+\
+
+\f1\b 13:22\
+
+\f0\b0 after summarizing the pertinent data, the following observations have been made:\
+\
+1. community health workers were only measured during 2019 (possibly because of the covid-19 pandemic) They are too many (248,584) and will be a great outlier, but they are significant as well.\
+\
+2. environmental and occupational and hygiene health personnel were only measured during 2015. I currently don\'92t have a probable reason in mind.\
+\
+3. 2011 to 2016 do not have results from the WHO database. That is under the administration of former President Benigno SImeon C. Aquino III.\
+\
+4. the doctor\'92s population before 2017 were far less than the doctors before 2010. It could be observed that from 2000 to 2010, the number of doctors become less when the number of dentists are present (2000, 2002, 2004, and 2008). But it doesn\'92t add up. The combined number of doctors and dentists for the mentioned periods are too high compared to the trends.\
+\
+5. nurses have the highest population, with almost five to one nurse to doctor ratio.\
+\
+6. there is an observed decrease in the population of medical professionals between 2009 and 2017. It\'92s probably due to the nursing boom during the Arroyo administration which mellowed during the succeeding administrations.\
+\
+7. due to the availability and reliability of data, an analysis starting 2017 will be the most viable option, including only medical doctors, dentists, pharmacists, nurses, midwives, and medical and pathological laboratory personnel.\
+
+\f1\b 14:00
+\f0\b0 \
+\
+\
+\
+
+\f1\b 14:17
+\f0\b0 \
+I removed the entries from years before 2017. I also removed data from the community health workers and the traditional and complementary medicine personnel. I named the sheet, \'93main_processed\'94, ready for further analysis and visualization.\
+\
+I just realized that I should include a total.\
+\
+\
+visualizations:\
+1. histrogram <to be used as a filter for time series> , donut chart/bar chart. I think bar chart will be better 
+\f3 \uc0\u9989 
+\f0 \
+2. bullet chart/horizontal bar chart 
+\f3 \uc0\u9989 
+\f0 \
+3 and 4. stacked area chart (make the color of the practicing bolder than that of the total number of graduates)\
+5. line chart (predictive)\
+\
+
+\f1\b 14:43
+\f0\b0 \
+need to work on the other data sets:\
+1. number of board passers\
+2. number of graduates\
+3. population of the Philippines\
+\
+note: the data to be collected is from 2017 to 
+\f1\b 2021
+\f0\b0 \
+\
+
+\f1\b 15:20\
+\
+\
+\
+20:05\
+
+\f0\b0 gather data\
+\
+found philippine population in https://data.worldbank.org/indicator/SP.POP.TOTL?locations=PH\
+\
+the entries are few so I\'92ll just clean it through excel\
+\
+computed required health workers\
+\
+missing:\
+number of passers in dentistry in 2021\
+number of passers in all med fields in 2017\
+\
+the 4.45 to 1000 ratio only pertains to doctors, nurses, and midwives. I will just put another option, a bar graph for what is needed (doctors, nurses, and midwives) and another option that shows the number of total health care professionals.\
+\
+or maybe, it\'92s better if I just concentrate on the doctors, nurses, and midwives so as not to be confusing.\
+\
+
+\f1\b 21:26
+\f0\b0 \
+the number of doctors, nurses, and midwives exceed the minimum standard of the WHO.\
+\
+seems like I still have to show the number of passer\
+\
+22:34\
+it seems like the breakdown of nurses is:\
+509,297 are employed in the PH\
+316,415 are employed overseas (source: https://asianews.network/filipino-nurses-best-in-the-world-but-decent-pay-work-elusive-in-philippines/)\
+~124,000 are jobless, underemployed (source: https://www.philstar.com/headlines/2023/07/12/2280490/doh-124000-nurses-jobless-underemployed)\
+for a total of 951,105 registered nurses\
+
+\f1\b 22:35
+\f0\b0 \
+\
+\
+\
+
+\f1\b 21:08
+\f0\b0 \
+how do I deal with this? it seems to be too complex. if I will not be able to find enough data, I will just make tables with calculations that assume that the current rate of practicing nurses and physicians is the same for the years that passed.\
+\
+I resolved to just make the title Philippine Health Workforce according to WHO\
+
+\f1\b 23:02
+\f0\b0 \
+\
+\
+
+\f1\b \
+
+\f0\b0 2023/09/07\
+
+\f1\b 22:00
+\f0\b0 \
+after so much digging, I was able to find a stat that could help me. \'93State of the World\'92s Nursing 2020 paints a picture of complex health labor market challenges. In the Philippines, only 50-60% of nursing graduates become professional nurses who are eligible to practice as nurses in the country.\'94 source: https://www.who.int/philippines/news/detail/07-04-2020-urgent-need-for-investment-in-nursing\
+\
+\'93The 2015 Census of Population, meanwhile, revealed that the Philippines had 488,800 health professionals for a population of over 100 million (2015 census cited in UPPI and DRDF, 2020), while the 2018 National Migration Survey estimated that under 1 per cent of working Filipinos in the Philippines are employed as health professionals (PSA and UPPI, 2019). Within this small demographic, the majority (59 per cent) are nurses, 12 per cent are medical doctors, and 11 per cent are midwives (PSA and UPPI, 2019). If the country fails to invest more in retaining its nursing population, it is looking at a deficiency of 249,843 nurses by 2030 (WHO, 2020b). The Philippine Nurses Association (PNA) has stated that 60 per cent of the 500,000 Filipino registered nurses work in other countries (PNA cited in Malig, 2020). Further, in 2014, according to the Philippine Overseas Employment Administration (POEA), 19,815 nurses emigrated from the country (POEA, 2014).\'94 \
+source: https://journals.openedition.org/poldev/4853?lang=en\
+\
+"Based on the 2015 Census, almost a fifth of the total health professionals in the Philippines are working overseas. \'93\
+source: https://www.uppi.upd.edu.ph/research/covid-19/rb8
+\f1\b \
+
+\f0\b0 \
+\
+gained insights from a friend\
+\
+ended at 2023/09/11\
+
+\f1\b \
+}
